@@ -725,26 +725,26 @@ class GitRepo:
             upstream_url += ".git"
         
         # Whitelist for Jacob10383/moonraker repo
-        is_greenlisted_repo = "jacob10383/moonraker" in upstream_url
-        
-        if upstream_url != self.origin_url.lower() and not is_greenlisted_repo:
+        is_whitelisted_repo = "jacob10383/moonraker" in upstream_url
+
+        if upstream_url != self.origin_url.lower() and not is_whitelisted_repo:
             self.repo_anomalies.append(f"Unofficial remote url: {self.upstream_url}")
-        
+
         # Whitelist k2 branch for Jacob10383 repo
-        is_greenlisted_branch = self.git_branch == "k2" and is_greenlisted_repo
-        
-        if (self.git_branch != self.primary_branch or self.git_remote != "origin") and not is_greenlisted_branch:
+        is_whitelisted_branch = self.git_branch == "k2" and is_whitelisted_repo
+
+        if (self.git_branch != self.primary_branch or self.git_remote != "origin") and not is_whitelisted_branch:
             self.repo_anomalies.append(
                 "Repo not on official remote/branch, expected: "
                 f"origin/{self.primary_branch}, detected: "
                 f"{self.git_remote}/{self.git_branch}")
         if self.untracked_files:
             # Whitelist specific files
-            greenlisted_files = {'moonraker/components/timelapse.py'}
-            non_greenlisted = [f for f in self.untracked_files if f not in greenlisted_files]
-            if non_greenlisted:
+            whitelisted_files = {'moonraker/components/timelapse.py'}
+            non_whitelisted = [f for f in self.untracked_files if f not in whitelisted_files]
+            if non_whitelisted:
                 self.repo_anomalies.append(
-                    f"Repo has untracked source files: {non_greenlisted}"
+                    f"Repo has untracked source files: {non_whitelisted}"
                 )
         if self.diverged:
             self.repo_anomalies.append("Repo has diverged from remote")
